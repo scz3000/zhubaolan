@@ -39,8 +39,8 @@ body{background:#ffe3e8;padding-bottom:8vw}
 .picwall .pic-item img{width:100%;height:100%;object-fit:cover}
 .placeholder-img{background:linear-gradient(135deg,#fce1e1,#ffd0d8);display:flex;align-items:center;justify-content:center;color:#e7485f;font-size:3vw;border:2px dashed #e7485f;border-radius:1vw;aspect-ratio:1;text-align:center;padding:1vw}
 .container{padding:0 2vw}
-.bgmusic_btn_play{position:fixed;right:10px;top:10px;z-index:999900;display:inline-block;width:30px;height:30px;background-image:url(https://jzhome1.klb123.com/resume/3/audio.png);background-repeat:no-repeat;background-size:30px 60px;background-position:0px 0px;-webkit-animation:reverseRotataZ 1.2s linear infinite;animation:reverseRotataZ 1.2s linear infinite;cursor:pointer}
-.bgmusic_btn_pause{position:fixed;right:10px;top:10px;z-index:999900;display:inline-block;width:30px;height:30px;background-image:url(https://jzhome1.klb123.com/resume/3/audio.png);background-repeat:no-repeat;background-size:30px 60px;background-position:0px -30px;cursor:pointer}
+.bgmusic_btn_play{position:fixed;right:10px;top:10px;z-index:999900;width:36px;height:36px;background:#e7485f;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.2);cursor:pointer;-webkit-animation:reverseRotataZ 1.2s linear infinite;animation:reverseRotataZ 1.2s linear infinite}
+.bgmusic_btn_pause{position:fixed;right:10px;top:10px;z-index:999900;width:36px;height:36px;background:#e7485f;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.2);cursor:pointer}
 @-webkit-keyframes reverseRotataZ{0%{-webkit-transform:rotateZ(0deg)}100%{-webkit-transform:rotateZ(-360deg)}}
 @keyframes reverseRotataZ{0%{transform:rotateZ(0deg)}100%{transform:rotateZ(-360deg)}}
 </style>
@@ -49,18 +49,20 @@ body{background:#ffe3e8;padding-bottom:8vw}
 <div class="bg-layer"><img src="https://jzhome1.klb123.com/resume/3/images/bg.png?a=2" alt="背景"></div>
 <div class="topbar"><a href="index.html" class="back-btn">&#9664;</a><div class="page-title-bar">⭐ 技能擅长</div></div>
 <div class="container"><section class="formhead100">⭐ 技能擅长</section><section class="formblock"><div class="jinengcard_info"><div class="jinengcard_title">❤ 专业技能</div><div class="jinengcard_item2"><span class="jinengcard_item_icon">✦</span><span style="width:28%;font-size:3.5vw;">新生儿护理</span><div style="flex:1;margin:0 2vw;"><div class="jinengcard_bar" style="width:95%;"></div></div><span style="font-size:3vw;color:#999;">95%</span></div><div class="jinengcard_item2"><span class="jinengcard_item_icon">✦</span><span style="width:28%;font-size:3.5vw;">双胞胎护理</span><div style="flex:1;margin:0 2vw;"><div class="jinengcard_bar" style="width:92%;"></div></div><span style="font-size:3vw;color:#999;">92%</span></div><div class="jinengcard_item2"><span class="jinengcard_item_icon">✦</span><span style="width:28%;font-size:3.5vw;">早产儿护理</span><div style="flex:1;margin:0 2vw;"><div class="jinengcard_bar" style="width:90%;"></div></div><span style="font-size:3vw;color:#999;">90%</span></div><div class="jinengcard_item2"><span class="jinengcard_item_icon">✦</span><span style="width:28%;font-size:3.5vw;">月子餐制作</span><div style="flex:1;margin:0 2vw;"><div class="jinengcard_bar" style="width:90%;"></div></div><span style="font-size:3vw;color:#999;">90%</span></div><div class="jinengcard_item2"><span class="jinengcard_item_icon">✦</span><span style="width:28%;font-size:3.5vw;">催乳通乳</span><div style="flex:1;margin:0 2vw;"><div class="jinengcard_bar" style="width:88%;"></div></div><span style="font-size:3vw;color:#999;">88%</span></div><div class="jinengcard_item2"><span class="jinengcard_item_icon">✦</span><span style="width:28%;font-size:3.5vw;">客家月子餐</span><div style="flex:1;margin:0 2vw;"><div class="jinengcard_bar" style="width:93%;"></div></div><span style="font-size:3vw;color:#999;">93%</span></div></div><div style="padding:2vw 3vw;"><span class="ayitag">新生儿护理</span><span class="ayitag">双胞胎护理</span><span class="ayitag">早产儿护理</span><span class="ayitag">月子餐</span><span class="ayitag">催乳</span><span class="ayitag">客家菜</span><span class="ayitag">产后康复</span><span class="ayitag">婴儿抚触</span><span class="ayitag">黄疸观察</span></div></section></div>
-<!-- bgm -->
-<audio id="bgmusic" src="bgmusic.wav" loop preload="auto"></audio>
-<div id="musicBtn" class="bgmusic_btn_pause" onclick="toggleMusic()"></div>
+</script>
+<div id="musicBtn" class="bgmusic_btn_pause" onclick="toggleMusic()">&#127925;</div>
 <script>
-var bgm=document.getElementById("bgmusic");
-var btn=document.getElementById("musicBtn");
-var isP=false;
-function toggleMusic(){if(isP){bgm.pause();btn.className="bgmusic_btn_pause";isP=false;}else{bgm.play().then(function(){btn.className="bgmusic_btn_play";isP=true;}).catch(function(){})}}
-function tryPlay(){bgm.play().then(function(){btn.className="bgmusic_btn_play";isP=true;}).catch(function(){})}
-document.addEventListener("click",function(){if(!isP)tryPlay();},{once:true});
-if(typeof WeixinJSBridge!="undefined"){WeixinJSBridge.invoke("getNetworkType",{},function(){tryPlay();})}
-document.addEventListener("WeixinJSBridgeReady",function(){tryPlay();});
+var isP=false,actx,gainNode,loopTimer;
+function initA(){try{actx=new(window.AudioContext||window.webkitAudioContext)();gainNode=actx.createGain();gainNode.gain.value=0.25;gainNode.connect(actx.destination)}catch(e){}}
+var notes=[523,587,659,784,659,587,523,0,494,523,587,659,523,494,440,0];
+var durs=[0.4,0.3,0.4,0.6,0.3,0.4,0.5,0.2,0.4,0.3,0.4,0.6,0.3,0.4,0.5,0.2];
+function playM(){if(!actx)initA();if(!actx)return;var t=actx.currentTime;for(var i=0;i<notes.length;i++){if(notes[i]==0){t+=durs[i];continue}var osc=actx.createOscillator();osc.type="sine";osc.frequency.value=notes[i];var g=actx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.4,t+0.05);g.gain.exponentialRampToValueAtTime(0.001,t+durs[i]-0.05);osc.connect(g);g.connect(gainNode);osc.start(t);osc.stop(t+durs[i]);t+=durs[i]}return t}
+function sched(){if(!isP)return;var et=playM();var dur=et-actx.currentTime+0.3;loopTimer=setTimeout(sched,dur*1000)}
+function toggleMusic(){var btn=document.getElementById("musicBtn");if(isP){isP=false;clearTimeout(loopTimer);try{actx.suspend()}catch(e){}btn.className="bgmusic_btn_pause"}else{if(!actx)initA();try{actx.resume()}catch(e){}isP=true;sched();btn.className="bgmusic_btn_play"}}
+function tryP(){if(!isP)toggleMusic()}
+document.addEventListener("click",function(){if(!isP)tryP()},{once:true});
+if(typeof WeixinJSBridge!="undefined"){WeixinJSBridge.invoke("getNetworkType",{},function(){tryP()})}
+document.addEventListener("WeixinJSBridgeReady",function(){tryP()});
 </script>
 </body>
 </html>

@@ -29,6 +29,10 @@ body{background:#ffe3e8;min-height:100vh}
 .contact-bar{text-align:center;padding:2vw 3vw 8vw}
 .contact-btn{display:inline-block;background:linear-gradient(to bottom,#ff798e,#ff97a5);color:#fff;font-size:3.8vw;font-weight:bold;padding:3vw 12vw;border-radius:5vw;text-decoration:none;letter-spacing:0.3vw;box-shadow:0 2px 8px rgba(0,0,0,0.15);border:1px solid rgba(255,255,255,0.5)}
 .page-title{text-align:center;color:#e7485f;font-size:4vw;padding:3vw 0 0;font-weight:bold}
+.bgmusic_btn_play{position:fixed;right:10px;top:10px;z-index:999900;display:inline-block;width:30px;height:30px;background-image:url(https://jzhome1.klb123.com/resume/3/audio.png);background-repeat:no-repeat;background-size:30px 60px;background-position:0px 0px;-webkit-animation:reverseRotataZ 1.2s linear infinite;animation:reverseRotataZ 1.2s linear infinite;cursor:pointer}
+.bgmusic_btn_pause{position:fixed;right:10px;top:10px;z-index:999900;display:inline-block;width:30px;height:30px;background-image:url(https://jzhome1.klb123.com/resume/3/audio.png);background-repeat:no-repeat;background-size:30px 60px;background-position:0px -30px;cursor:pointer}
+@-webkit-keyframes reverseRotataZ{0%{-webkit-transform:rotateZ(0deg)}100%{-webkit-transform:rotateZ(-360deg)}}
+@keyframes reverseRotataZ{0%{transform:rotateZ(0deg)}100%{transform:rotateZ(-360deg)}}
 </style>
 </head>
 <body>
@@ -52,5 +56,18 @@ body{background:#ffe3e8;min-height:100vh}
 <a href="meals.html" class="menu-card"><div class="menu-icon" style="background:linear-gradient(135deg,#ffcc80,#ff9800)">🍲</div><span class="menu-label">营养月子餐</span></a>
 </div>
 <div class="contact-bar"><a href="tel:" class="contact-btn">📞 立即联系</a></div>
+<!-- bgm -->
+<audio id="bgmusic" src="bgmusic.wav" loop preload="auto"></audio>
+<div id="musicBtn" class="bgmusic_btn_pause" onclick="toggleMusic()"></div>
+<script>
+var bgm=document.getElementById("bgmusic");
+var btn=document.getElementById("musicBtn");
+var isP=false;
+function toggleMusic(){if(isP){bgm.pause();btn.className="bgmusic_btn_pause";isP=false;}else{bgm.play().then(function(){btn.className="bgmusic_btn_play";isP=true;}).catch(function(){})}}
+function tryPlay(){bgm.play().then(function(){btn.className="bgmusic_btn_play";isP=true;}).catch(function(){})}
+document.addEventListener("click",function(){if(!isP)tryPlay();},{once:true});
+if(typeof WeixinJSBridge!="undefined"){WeixinJSBridge.invoke("getNetworkType",{},function(){tryPlay();})}
+document.addEventListener("WeixinJSBridgeReady",function(){tryPlay();});
+</script>
 </body>
 </html>

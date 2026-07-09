@@ -39,11 +39,28 @@ body{background:#ffe3e8;padding-bottom:8vw}
 .picwall .pic-item img{width:100%;height:100%;object-fit:cover}
 .placeholder-img{background:linear-gradient(135deg,#fce1e1,#ffd0d8);display:flex;align-items:center;justify-content:center;color:#e7485f;font-size:3vw;border:2px dashed #e7485f;border-radius:1vw;aspect-ratio:1;text-align:center;padding:1vw}
 .container{padding:0 2vw}
+.bgmusic_btn_play{position:fixed;right:10px;top:10px;z-index:999900;display:inline-block;width:30px;height:30px;background-image:url(https://jzhome1.klb123.com/resume/3/audio.png);background-repeat:no-repeat;background-size:30px 60px;background-position:0px 0px;-webkit-animation:reverseRotataZ 1.2s linear infinite;animation:reverseRotataZ 1.2s linear infinite;cursor:pointer}
+.bgmusic_btn_pause{position:fixed;right:10px;top:10px;z-index:999900;display:inline-block;width:30px;height:30px;background-image:url(https://jzhome1.klb123.com/resume/3/audio.png);background-repeat:no-repeat;background-size:30px 60px;background-position:0px -30px;cursor:pointer}
+@-webkit-keyframes reverseRotataZ{0%{-webkit-transform:rotateZ(0deg)}100%{-webkit-transform:rotateZ(-360deg)}}
+@keyframes reverseRotataZ{0%{transform:rotateZ(0deg)}100%{transform:rotateZ(-360deg)}}
 </style>
 </head>
 <body>
 <div class="bg-layer"><img src="https://jzhome1.klb123.com/resume/3/images/bg.png?a=2" alt="背景"></div>
 <div class="topbar"><a href="index.html" class="back-btn">&#9664;</a><div class="page-title-bar">📅 个人经历</div></div>
 <div class="container"><section class="formhead100">📅 个人经历</section><section class="formblock"><div style="padding:3vw 0;"><div class="timeline_item"><div class="timeline_quanbox"></div><div class="timeline_title">2023年 - 至今</div><div class="timeline_content">福建 · 带过双胞胎和早产儿<br>积累了丰富的特殊宝宝护理经验，熟练掌握双胞胎喂养、早产儿护理等技能。</div></div><div class="timeline_item"><div class="timeline_quanbox"></div><div class="timeline_title">2020年 - 2023年</div><div class="timeline_content">福建 · 服务20+家庭<br>在福州、厦门等地服务多个家庭，擅长福建月子餐和客家饮食调理。</div></div><div class="timeline_item"><div class="timeline_quanbox"></div><div class="timeline_title">2017年 - 2020年</div><div class="timeline_content">福建 · 开始从事月嫂工作<br>通过专业培训取得月嫂证书，从新手成长为经验丰富的月嫂。</div></div></div></section></div>
+<!-- bgm -->
+<audio id="bgmusic" src="bgmusic.wav" loop preload="auto"></audio>
+<div id="musicBtn" class="bgmusic_btn_pause" onclick="toggleMusic()"></div>
+<script>
+var bgm=document.getElementById("bgmusic");
+var btn=document.getElementById("musicBtn");
+var isP=false;
+function toggleMusic(){if(isP){bgm.pause();btn.className="bgmusic_btn_pause";isP=false;}else{bgm.play().then(function(){btn.className="bgmusic_btn_play";isP=true;}).catch(function(){})}}
+function tryPlay(){bgm.play().then(function(){btn.className="bgmusic_btn_play";isP=true;}).catch(function(){})}
+document.addEventListener("click",function(){if(!isP)tryPlay();},{once:true});
+if(typeof WeixinJSBridge!="undefined"){WeixinJSBridge.invoke("getNetworkType",{},function(){tryPlay();})}
+document.addEventListener("WeixinJSBridgeReady",function(){tryPlay();});
+</script>
 </body>
 </html>

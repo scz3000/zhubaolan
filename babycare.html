@@ -39,11 +39,28 @@ body{background:#ffe3e8;padding-bottom:8vw}
 .picwall .pic-item img{width:100%;height:100%;object-fit:cover}
 .placeholder-img{background:linear-gradient(135deg,#fce1e1,#ffd0d8);display:flex;align-items:center;justify-content:center;color:#e7485f;font-size:3vw;border:2px dashed #e7485f;border-radius:1vw;aspect-ratio:1;text-align:center;padding:1vw}
 .container{padding:0 2vw}
+.bgmusic_btn_play{position:fixed;right:10px;top:10px;z-index:999900;display:inline-block;width:30px;height:30px;background-image:url(https://jzhome1.klb123.com/resume/3/audio.png);background-repeat:no-repeat;background-size:30px 60px;background-position:0px 0px;-webkit-animation:reverseRotataZ 1.2s linear infinite;animation:reverseRotataZ 1.2s linear infinite;cursor:pointer}
+.bgmusic_btn_pause{position:fixed;right:10px;top:10px;z-index:999900;display:inline-block;width:30px;height:30px;background-image:url(https://jzhome1.klb123.com/resume/3/audio.png);background-repeat:no-repeat;background-size:30px 60px;background-position:0px -30px;cursor:pointer}
+@-webkit-keyframes reverseRotataZ{0%{-webkit-transform:rotateZ(0deg)}100%{-webkit-transform:rotateZ(-360deg)}}
+@keyframes reverseRotataZ{0%{transform:rotateZ(0deg)}100%{transform:rotateZ(-360deg)}}
 </style>
 </head>
 <body>
 <div class="bg-layer"><img src="https://jzhome1.klb123.com/resume/3/images/bg.png?a=2" alt="背景"></div>
 <div class="topbar"><a href="index.html" class="back-btn">&#9664;</a><div class="page-title-bar">👶 宝贝护理</div></div>
 <div class="container"><section class="formhead100">👶 宝贝护理</section><section class="formblock"><div class="formbox100" style="margin-bottom:2vw;">新生儿喂养、拍嗝、洗澡、脐部护理、黄疸观察、体温监测、婴儿抚触、被动操。特别擅长双胞胎和早产儿的护理，对早产儿体温调节、喂养节奏、发育促进有丰富经验。</div><div class="picwall"><div class="pic-item"><div class="placeholder-img">照片1<br>(替换)</div></div><div class="pic-item"><div class="placeholder-img">照片2<br>(替换)</div></div><div class="pic-item"><div class="placeholder-img">照片3<br>(替换)</div></div></div></section></div>
+<!-- bgm -->
+<audio id="bgmusic" src="bgmusic.wav" loop preload="auto"></audio>
+<div id="musicBtn" class="bgmusic_btn_pause" onclick="toggleMusic()"></div>
+<script>
+var bgm=document.getElementById("bgmusic");
+var btn=document.getElementById("musicBtn");
+var isP=false;
+function toggleMusic(){if(isP){bgm.pause();btn.className="bgmusic_btn_pause";isP=false;}else{bgm.play().then(function(){btn.className="bgmusic_btn_play";isP=true;}).catch(function(){})}}
+function tryPlay(){bgm.play().then(function(){btn.className="bgmusic_btn_play";isP=true;}).catch(function(){})}
+document.addEventListener("click",function(){if(!isP)tryPlay();},{once:true});
+if(typeof WeixinJSBridge!="undefined"){WeixinJSBridge.invoke("getNetworkType",{},function(){tryPlay();})}
+document.addEventListener("WeixinJSBridgeReady",function(){tryPlay();});
+</script>
 </body>
 </html>

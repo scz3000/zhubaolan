@@ -107,18 +107,103 @@ html{scroll-behavior:smooth}
 <a href="#interact" style="color:#fff;text-decoration:none;font-size:2.8vw;padding:1.2vw 2.5vw;margin:0.3vw;background:rgba(255,255,255,0.15);border-radius:2vw;white-space:nowrap">互动</a>
 <a href="#meals" style="color:#fff;text-decoration:none;font-size:2.8vw;padding:1.2vw 2.5vw;margin:0.3vw;background:rgba(255,255,255,0.15);border-radius:2vw;white-space:nowrap">月子餐</a>
 </div>
-<script>
-var isP=false,actx,gainNode,loopTimer;
-var notes=[523,587,659,784,659,587,523,0,494,523,587,659,523,494,440,0];
-var durs=[0.4,0.3,0.4,0.6,0.3,0.4,0.5,0.2,0.4,0.3,0.4,0.6,0.3,0.4,0.5,0.2];
-function initA(){try{actx=new(window.AudioContext||window.webkitAudioContext)();gainNode=actx.createGain();gainNode.gain.value=0.25;gainNode.connect(actx.destination)}catch(e){}}
-function playM(){if(!actx)initA();if(!actx)return;var t=actx.currentTime;for(var i=0;i<notes.length;i++){if(notes[i]==0){t+=durs[i];continue}var osc=actx.createOscillator();osc.type="sine";osc.frequency.value=notes[i];var g=actx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.4,t+0.05);g.gain.exponentialRampToValueAtTime(0.001,t+durs[i]-0.05);osc.connect(g);g.connect(gainNode);osc.start(t);osc.stop(t+durs[i]);t+=durs[i]}return t}
-function sched(){if(!isP)return;var et=playM();loopTimer=setTimeout(sched,(et-actx.currentTime+0.3)*1000)}
-function toggleMusic(){var btn=document.getElementById("musicBtn");if(isP){isP=false;clearTimeout(loopTimer);try{actx.suspend()}catch(e){}btn.className="music-btn"}else{if(!actx)initA();try{actx.resume()}catch(e){}isP=true;sched();btn.className="music-btn music-spin"}}
-function tryP(){if(!isP)toggleMusic()}
-document.addEventListener("click",function(){if(!isP)tryP()},{once:true});
-if(typeof WeixinJSBridge!="undefined"){WeixinJSBridge.invoke("getNetworkType",{},function(){tryP()})}
-document.addEventListener("WeixinJSBridgeReady",function(){tryP()});
+<script>var isPlaying = false;
+var actx = null;
+var gainNode = null;
+var loopTimer = null;
+
+var noteFreqs = [523,587,659,784,659,587,523,0,494,523,587,659,523,494,440,0];
+var noteDurs = [0.4,0.3,0.4,0.6,0.3,0.4,0.5,0.2,0.4,0.3,0.4,0.6,0.3,0.4,0.5,0.2];
+
+function initAudio() {
+    if (actx) return true;
+    try {
+        actx = new (window.AudioContext || window.webkitAudioContext)();
+        gainNode = actx.createGain();
+        gainNode.gain.value = 0.3;
+        gainNode.connect(actx.destination);
+        return true;
+    } catch(e) {
+        console.log('AudioContext error:', e);
+        return false;
+    }
+}
+
+function playMelody() {
+    if (!initAudio()) return 0;
+    var t = actx.currentTime;
+    for (var i = 0; i < noteFreqs.length; i++) {
+        if (noteFreqs[i] === 0) { t += noteDurs[i]; continue; }
+        var osc = actx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.value = noteFreqs[i];
+        var g = actx.createGain();
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(0.4, t + 0.05);
+        g.gain.exponentialRampToValueAtTime(0.001, t + noteDurs[i] - 0.05);
+        osc.connect(g);
+        g.connect(gainNode);
+        osc.start(t);
+        osc.stop(t + noteDurs[i]);
+        t += noteDurs[i];
+    }
+    return t;
+}
+
+function scheduleLoop() {
+    if (!isPlaying) return;
+    var endT = playMelody();
+    var dur = Math.max(0.1, endT - actx.currentTime + 0.3);
+    loopTimer = setTimeout(scheduleLoop, dur * 1000);
+}
+
+function startMusic() {
+    if (isPlaying) return;
+    if (!initAudio()) return;
+    if (actx.state === 'suspended') actx.resume();
+    isPlaying = true;
+    scheduleLoop();
+    var btn = document.getElementById('musicBtn');
+    if (btn) btn.className = 'music-btn music-spin';
+}
+
+function stopMusic() {
+    if (!isPlaying) return;
+    isPlaying = false;
+    clearTimeout(loopTimer);
+    if (actx && actx.state !== 'closed') actx.suspend();
+    var btn = document.getElementById('musicBtn');
+    if (btn) btn.className = 'music-btn';
+}
+
+function toggleMusic() {
+    if (isPlaying) stopMusic();
+    else startMusic();
+}
+
+function tryAutoPlay() {
+    if (!isPlaying) startMusic();
+}
+
+// 页面任意点击启动音乐
+document.addEventListener('click', function() {
+    tryAutoPlay();
+});
+
+// 微信兼容
+if (typeof WeixinJSBridge !== 'undefined') {
+    WeixinJSBridge.invoke('getNetworkType', {}, function() {
+        tryAutoPlay();
+    });
+}
+document.addEventListener('WeixinJSBridgeReady', function() {
+    tryAutoPlay();
+});
+
+// 页面加载完成后尝试启动（某些浏览器允许）
+window.addEventListener('load', function() {
+    setTimeout(tryAutoPlay, 1000);
+});
 </script>
 </body>
 </html>

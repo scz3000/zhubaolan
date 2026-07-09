@@ -39,8 +39,8 @@ body{background:#ffe3e8;padding-bottom:8vw}
 .picwall .pic-item img{width:100%;height:100%;object-fit:cover}
 .placeholder-img{background:linear-gradient(135deg,#fce1e1,#ffd0d8);display:flex;align-items:center;justify-content:center;color:#e7485f;font-size:3vw;border:2px dashed #e7485f;border-radius:1vw;aspect-ratio:1;text-align:center;padding:1vw}
 .container{padding:0 2vw}
-.bgmusic_btn_play{position:fixed;right:10px;top:10px;z-index:999900;display:inline-block;width:30px;height:30px;background-image:url(https://jzhome1.klb123.com/resume/3/audio.png);background-repeat:no-repeat;background-size:30px 60px;background-position:0px 0px;-webkit-animation:reverseRotataZ 1.2s linear infinite;animation:reverseRotataZ 1.2s linear infinite;cursor:pointer}
-.bgmusic_btn_pause{position:fixed;right:10px;top:10px;z-index:999900;display:inline-block;width:30px;height:30px;background-image:url(https://jzhome1.klb123.com/resume/3/audio.png);background-repeat:no-repeat;background-size:30px 60px;background-position:0px -30px;cursor:pointer}
+.bgmusic_btn_play{position:fixed;right:10px;top:10px;z-index:999900;width:36px;height:36px;background:#e7485f;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.2);cursor:pointer;-webkit-animation:reverseRotataZ 1.2s linear infinite;animation:reverseRotataZ 1.2s linear infinite}
+.bgmusic_btn_pause{position:fixed;right:10px;top:10px;z-index:999900;width:36px;height:36px;background:#e7485f;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.2);cursor:pointer}
 @-webkit-keyframes reverseRotataZ{0%{-webkit-transform:rotateZ(0deg)}100%{-webkit-transform:rotateZ(-360deg)}}
 @keyframes reverseRotataZ{0%{transform:rotateZ(0deg)}100%{transform:rotateZ(-360deg)}}
 </style>
@@ -49,18 +49,20 @@ body{background:#ffe3e8;padding-bottom:8vw}
 <div class="bg-layer"><img src="https://jzhome1.klb123.com/resume/3/images/bg.png?a=2" alt="背景"></div>
 <div class="topbar"><a href="index.html" class="back-btn">&#9664;</a><div class="page-title-bar">🍲 营养月子餐</div></div>
 <div class="container"><section class="formhead100">🍲 营养月子餐</section><section class="formblock"><div class="formbox100" style="margin-bottom:2vw;">科学搭配月子餐，擅长福建和客家风味月子膳食。根据产妇体质和恢复阶段定制食谱，特色菜品有客家猪脚姜、酒酿圆子、麻油鸡、鲫鱼汤等，注重营养均衡、促进乳汁分泌和身体恢复。</div><div class="picwall"><div class="pic-item"><div class="placeholder-img">照片1<br>(替换)</div></div><div class="pic-item"><div class="placeholder-img">照片2<br>(替换)</div></div><div class="pic-item"><div class="placeholder-img">照片3<br>(替换)</div></div><div class="pic-item"><div class="placeholder-img">照片4<br>(替换)</div></div><div class="pic-item"><div class="placeholder-img">照片5<br>(替换)</div></div><div class="pic-item"><div class="placeholder-img">照片6<br>(替换)</div></div></div></section></div>
-<!-- bgm -->
-<audio id="bgmusic" src="bgmusic.wav" loop preload="auto"></audio>
-<div id="musicBtn" class="bgmusic_btn_pause" onclick="toggleMusic()"></div>
+</script>
+<div id="musicBtn" class="bgmusic_btn_pause" onclick="toggleMusic()">&#127925;</div>
 <script>
-var bgm=document.getElementById("bgmusic");
-var btn=document.getElementById("musicBtn");
-var isP=false;
-function toggleMusic(){if(isP){bgm.pause();btn.className="bgmusic_btn_pause";isP=false;}else{bgm.play().then(function(){btn.className="bgmusic_btn_play";isP=true;}).catch(function(){})}}
-function tryPlay(){bgm.play().then(function(){btn.className="bgmusic_btn_play";isP=true;}).catch(function(){})}
-document.addEventListener("click",function(){if(!isP)tryPlay();},{once:true});
-if(typeof WeixinJSBridge!="undefined"){WeixinJSBridge.invoke("getNetworkType",{},function(){tryPlay();})}
-document.addEventListener("WeixinJSBridgeReady",function(){tryPlay();});
+var isP=false,actx,gainNode,loopTimer;
+function initA(){try{actx=new(window.AudioContext||window.webkitAudioContext)();gainNode=actx.createGain();gainNode.gain.value=0.25;gainNode.connect(actx.destination)}catch(e){}}
+var notes=[523,587,659,784,659,587,523,0,494,523,587,659,523,494,440,0];
+var durs=[0.4,0.3,0.4,0.6,0.3,0.4,0.5,0.2,0.4,0.3,0.4,0.6,0.3,0.4,0.5,0.2];
+function playM(){if(!actx)initA();if(!actx)return;var t=actx.currentTime;for(var i=0;i<notes.length;i++){if(notes[i]==0){t+=durs[i];continue}var osc=actx.createOscillator();osc.type="sine";osc.frequency.value=notes[i];var g=actx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.4,t+0.05);g.gain.exponentialRampToValueAtTime(0.001,t+durs[i]-0.05);osc.connect(g);g.connect(gainNode);osc.start(t);osc.stop(t+durs[i]);t+=durs[i]}return t}
+function sched(){if(!isP)return;var et=playM();var dur=et-actx.currentTime+0.3;loopTimer=setTimeout(sched,dur*1000)}
+function toggleMusic(){var btn=document.getElementById("musicBtn");if(isP){isP=false;clearTimeout(loopTimer);try{actx.suspend()}catch(e){}btn.className="bgmusic_btn_pause"}else{if(!actx)initA();try{actx.resume()}catch(e){}isP=true;sched();btn.className="bgmusic_btn_play"}}
+function tryP(){if(!isP)toggleMusic()}
+document.addEventListener("click",function(){if(!isP)tryP()},{once:true});
+if(typeof WeixinJSBridge!="undefined"){WeixinJSBridge.invoke("getNetworkType",{},function(){tryP()})}
+document.addEventListener("WeixinJSBridgeReady",function(){tryP()});
 </script>
 </body>
 </html>
